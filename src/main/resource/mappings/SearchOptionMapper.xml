@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间和接口保持一致-->
+<mapper namespace="com.skylon.Appmonitor.dao.SearchOptionDao">
+
+
+    <resultMap id="map" type="com.skylon.Appmonitor.entity.Project">
+        <id column="ProjId" property="id" jdbcType="VARCHAR"/>
+        <result column="ProjName" property="Name" jdbcType="VARCHAR"/>
+        <collection property="appList" javaType="ArrayList" ofType="com.skylon.Appmonitor.entity.App">
+            <id column="AppId" property="id" jdbcType="VARCHAR"/>
+            <result column="AppName" property="Name" jdbcType="VARCHAR"/>
+            <collection property="parameterList" javaType="List" ofType="com.skylon.Appmonitor.entity.Parameter">
+                <id column="ParamId" property="pid" jdbcType="VARCHAR"/>
+                <result column="ParamName" property="pName" jdbcType="VARCHAR"/>
+                <result column="ParamName" property="pStatus" jdbcType="VARCHAR"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <resultMap type="com.skylon.Appmonitor.entity.RealTimeMonitoringInformation" id="map2">
+        <result column="ProjId" property="ProjectCode" jdbcType="VARCHAR"/>
+        <result column="AppId" property="ProgramCode" jdbcType="VARCHAR"/>
+        <result column="ParamId" property="ParameterCode" jdbcType="VARCHAR"/>
+        <result column="Tm" property="CollectionTime" jdbcType="TIMESTAMP"/>
+        <result column="Status" property="Status" jdbcType="INTEGER"/>
+        <result column="Moditime" property="ReceiveTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap type="com.skylon.Appmonitor.entity.CompleteInformation" id="map3">
+        <result column="ProjId" property="ProjectCode" jdbcType="VARCHAR"/>
+        <result column="ProjName" property="ProjName" jdbcType="VARCHAR"/>
+        <result column="AppId" property="ProgramCode" jdbcType="VARCHAR"/>
+        <result column="AppName" property="AppName" jdbcType="VARCHAR"/>
+        <result column="ParamId" property="ParameterCode" jdbcType="VARCHAR"/>
+        <result column="ParamName" property="ParamName" jdbcType="VARCHAR"/>
+        <result column="Tm" property="CollectionTime" jdbcType="TIMESTAMP"/>
+        <result column="Status" property="Status" jdbcType="INTEGER"/>
+        <result column="Moditime" property="ReceiveTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+
+    <select id="tableinfoabc" resultMap="map">
+        select TR.ProjId,
+            TFQ_PROJ_B.ProjName,
+            TR.AppId,
+            app.AppName,
+            TR.ParamId,
+            param.ParamName
+        from TFQ_PROJ_B
+            inner join TFQ_Realation TR on TFQ_PROJ_B.ProjId = TR.ProjId
+            inner join TFQ_APP_B app on tr.AppId = app.AppId
+            inner join TFQ_PARAM_B param on TR.ParamId = param.ParamId
+    </select>
+
+
+    <select id="findStatus" resultMap="map2">
+        SELECT TOP 1 * FROM TFQ_Monitor_R
+        WHERE ProjId=#{proj} AND AppId=#{app} AND ParamId=#{param}
+        ORDER BY Tm
+    </select>
+
+    <select id="findAllStatus" resultMap="map3">
+        SELECT
+            TFQ_Monitor_R.Tm,
+            TFQ_Monitor_R.Status,
+            TFQ_Monitor_R.Moditime,
+            TFQ_APP_B.*,
+            TFQ_PROJ_B.*,
+            TFQ_PARAM_B.*
+        FROM ((TFQ_Monitor_R
+            INNER JOIN TFQ_APP_B ON TFQ_APP_B.AppId = TFQ_Monitor_R.AppId)
+            INNER JOIN TFQ_PARAM_B ON TFQ_Monitor_R.ParamId = TFQ_PARAM_B.ParamId)
+            INNER JOIN TFQ_PROJ_B ON TFQ_Monitor_R.ProjId = TFQ_PROJ_B.ProjId
+        WHERE TFQ_Monitor_R.ProjId=#{proj} AND TFQ_Monitor_R.AppId=#{app} AND TFQ_Monitor_R.ParamId=#{param}
+        ORDER BY TFQ_Monitor_R.Tm DESC
+    </select>
+
+
+
+
+
+</mapper>
+
+

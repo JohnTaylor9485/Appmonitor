@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间和接口保持一致-->
+<mapper namespace="com.skylon.Appmonitor.dao.RealtimeMonitoringDao">
+
+    <resultMap type="com.skylon.Appmonitor.entity.RealTimeMonitoringInformation" id="resultMap">
+        <result column="ProjId" property="ProjectCode" jdbcType="VARCHAR"/>
+        <result column="AppId" property="ProgramCode" jdbcType="VARCHAR"/>
+        <result column="ParamId" property="ParameterCode" jdbcType="VARCHAR"/>
+        <result column="Tm" property="CollectionTime" jdbcType="TIMESTAMP"/>
+        <result column="Status" property="Status" jdbcType="INTEGER"/>
+        <result column="Moditime" property="ReceiveTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap type="com.skylon.Appmonitor.entity.CompleteInformation" id="resultMap2">
+        <result column="ProjId" property="ProjectCode" jdbcType="VARCHAR"/>
+        <result column="ProjName" property="ProjName" jdbcType="VARCHAR"/>
+        <result column="AppId" property="ProgramCode" jdbcType="VARCHAR"/>
+        <result column="AppName" property="AppName" jdbcType="VARCHAR"/>
+        <result column="ParamId" property="ParameterCode" jdbcType="VARCHAR"/>
+        <result column="ParamName" property="ParamName" jdbcType="VARCHAR"/>
+        <result column="Tm" property="CollectionTime" jdbcType="TIMESTAMP"/>
+        <result column="Status" property="Status" jdbcType="INTEGER"/>
+        <result column="Moditime" property="ReceiveTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="listAllMInformation" resultMap="resultMap">
+        select *
+        from TFQ_Monitor_R
+        ORDER BY TFQ_Monitor_R.Moditime DESC
+    </select>
+    <insert id="insertMInformation" parameterType="com.skylon.Appmonitor.entity.RealTimeMonitoringInformation">
+        insert into TFQ_Monitor_R (ProjId, AppId, ParamId, Tm, Status, Moditime)
+        VALUES (#{ProjectCode}, #{ProgramCode}, #{ParameterCode}, #{CollectionTime}, #{Status}, #{ReceiveTime})
+    </insert>
+
+    <select id="showallData" resultMap="resultMap2">
+        SELECT
+            TFQ_Monitor_R.Tm,
+            TFQ_Monitor_R.Status,
+            TFQ_Monitor_R.Moditime,
+            TFQ_APP_B.*,
+            TFQ_PROJ_B.*,
+            TFQ_PARAM_B.*
+        FROM ((TFQ_Monitor_R
+            INNER JOIN TFQ_APP_B ON TFQ_APP_B.AppId = TFQ_Monitor_R.AppId)
+            INNER JOIN TFQ_PARAM_B ON TFQ_Monitor_R.ParamId = TFQ_PARAM_B.ParamId)
+            INNER JOIN TFQ_PROJ_B ON TFQ_Monitor_R.ProjId = TFQ_PROJ_B.ProjId
+        ORDER BY TFQ_Monitor_R.Moditime DESC
+    </select>
+</mapper>
+
+
