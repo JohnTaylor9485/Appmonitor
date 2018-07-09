@@ -33,7 +33,7 @@
 <button type="button" onclick="tableToExcel('datatable','data')">导出</button>
 
 <html>
-<table id="datatable" border="1" cellspacing="0" cellpadding="0" width="100%" style="align:center;">
+<table id="datatable" border="1" cellspacing="0" cellpadding="0" width="100%"  style="text-align:center; ">
     <tr bgcolor="ff9900" style="font-weight:bold;">
         <th>项目编号</th>
         <th>项目名称</th>

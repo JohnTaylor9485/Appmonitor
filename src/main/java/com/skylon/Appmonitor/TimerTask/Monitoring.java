@@ -1,21 +1,27 @@
 package com.skylon.Appmonitor.TimerTask;
+
 import com.skylon.Appmonitor.dao.RealtimeMonitoringDao;
 import com.skylon.Appmonitor.entity.RealTimeMonitoringInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 @Component
 public class Monitoring {
     @Autowired
     RealtimeMonitoringDao realtimeMonitoringDao;
     @Autowired
-    RealTimeMonitoringInformation realTimeMonitoringInformation ;
+    RealTimeMonitoringInformation realTimeMonitoringInformation;
     private String command;//最终要发送的命令
     private int Testport;//需要测试的端口
     private int Serverport;//接收命令的端口
@@ -65,16 +71,22 @@ public class Monitoring {
     public void testconnection() {
         //在此进行ping测试操作，设定测试时间，设定测试结果
         //应更改为更精确的测试方式，现在仅作为测试用途
-        TestTime = new Date();
+        Socket s = new Socket();
+        SocketAddress add = new InetSocketAddress(Testhost, Testport);
         try {
-            String temp = sdf.format(TestTime);
-            TestTime = sdf.parse(temp);
-            Socket testsocket = new Socket(Testhost, Testport);
-            testsocket.close();
+            TestTime = new Date();
+            s.connect(add, 3000);// 超时3秒
             status = 1;
-        } catch (Exception e) {
+        } catch (IOException e) {
+            //异常需要处理的业务逻辑
             status = 2;
             System.out.println("Connection Failed");
+        } finally {
+            try {
+                s.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -115,7 +127,7 @@ public class Monitoring {
         sendmsg();
     }
 
-    @Scheduled(cron = "0 0/10 * * * ?")
+    @Scheduled(cron = "* 0/10 * * * ?")
     public void test1() throws ParseException {
         Startmonitoring();
     }

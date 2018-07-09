@@ -59,7 +59,7 @@
     <select id="findStatus" resultMap="map2">
         SELECT TOP 1 * FROM TFQ_Monitor_R
         WHERE ProjId=#{proj} AND AppId=#{app} AND ParamId=#{param}
-        ORDER BY Tm
+        ORDER BY Moditime DESC
     </select>
 
     <select id="findAllStatus" resultMap="map3">
@@ -75,7 +75,7 @@
             INNER JOIN TFQ_PARAM_B ON TFQ_Monitor_R.ParamId = TFQ_PARAM_B.ParamId)
             INNER JOIN TFQ_PROJ_B ON TFQ_Monitor_R.ProjId = TFQ_PROJ_B.ProjId
         WHERE TFQ_Monitor_R.ProjId=#{proj} AND TFQ_Monitor_R.AppId=#{app} AND TFQ_Monitor_R.ParamId=#{param}
-        ORDER BY TFQ_Monitor_R.Tm DESC
+        ORDER BY TFQ_Monitor_R.Moditime DESC
     </select>
 
 

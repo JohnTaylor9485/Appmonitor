@@ -29,6 +29,17 @@
 </style>
 
 <table border="1" cellspacing="0" cellpadding="0" style="text-align:center; ">
+    <tr bgcolor="ff9900" style="font-weight:bold;">
+        <th width="500px">区县</th>
+        <th width="500px">部门</th>
+        <th width="995px">机关</th>
+        <th width="495px">状态</th>
+        <th width="1010px">详情</th>
+    </tr>
+</table>
+
+<table border="1" cellspacing="0" cellpadding="0" style="text-align:center; ">
+
     <c:forEach items="${requestScope.projectList}" var="keywordx" varStatus="id">
         <tr>
             <td width="500px">${keywordx.getName()}</td>

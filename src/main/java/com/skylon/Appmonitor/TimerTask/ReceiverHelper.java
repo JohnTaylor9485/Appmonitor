@@ -29,7 +29,7 @@ public class ReceiverHelper implements Runnable {
             realTimeMonitoringInformation.setParameterCode(result[2]);
             realTimeMonitoringInformation.setCollectionTime(sdf.parse(result[3]));
             realTimeMonitoringInformation.setReceiveTime(sdf.parse(result[4]));
-            if (result[5].equals("OK$"))
+            if (result[5].equals("1$"))
                 realTimeMonitoringInformation.setStatus(1);
             else
                 realTimeMonitoringInformation.setStatus(2);

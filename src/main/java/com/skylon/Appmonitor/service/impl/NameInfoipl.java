@@ -29,13 +29,15 @@ public class NameInfoipl implements INameInfo {
         if (status.isEmpty()) {
             flag = "ERROR0";
         } else {
+            System.out.println(status.get(0).getStatus());
             if (status.get(0).getStatus() != 1) {
                 flag = "ERROR1";
             } else {
                 Date d1 = new Date();
-                Date d2 = status.get(0).getCollectionTime();
-                long day = (d1.getTime() - d2.getTime()) / 1000 / 60 / 60 / 24;
-                if (day > 1) {
+                Date d2 = status.get(0).getReceiveTime();
+                double hour = (d1.getTime() - d2.getTime()) / 1000 / 60 / 60 ;
+                System.out.println(hour);
+                if (hour > 23.00) {
                     flag = "ERROR2";
                 }
             }
